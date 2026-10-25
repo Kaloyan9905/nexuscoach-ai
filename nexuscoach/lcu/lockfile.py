@@ -25,6 +25,19 @@ def find_lockfile() -> Optional[Path]:
             return lf
     return None
 
+def is_pid_alive(pid: int) -> bool:
+    """Check if process with given PID is currently active on Windows."""
+    try:
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        handle = kernel32.OpenProcess(0x1000, False, int(pid))
+        if handle:
+            kernel32.CloseHandle(handle)
+            return True
+        return False
+    except Exception:
+        return True
+
 def parse_lockfile(lockfile_path: Path) -> Optional[Dict[str, str]]:
     """Parse lockfile format: process_name:pid:port:password:protocol."""
     try:
@@ -43,9 +56,16 @@ def parse_lockfile(lockfile_path: Path) -> Optional[Dict[str, str]]:
         return None
     return None
 
-def get_lcu_credentials() -> Optional[Dict[str, str]]:
-    """Retrieve LCU port and auth credentials from lockfile."""
+def get_lcu_credentials(require_alive: bool = True) -> Optional[Dict[str, str]]:
+    """Retrieve LCU port and auth credentials from active lockfile."""
     lf = find_lockfile()
     if lf:
-        return parse_lockfile(lf)
+        creds = parse_lockfile(lf)
+        if creds and require_alive:
+            try:
+                if not is_pid_alive(int(creds["pid"])):
+                    return None
+            except Exception:
+                pass
+        return creds
     return None

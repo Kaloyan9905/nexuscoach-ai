@@ -114,6 +114,7 @@ python -m nexuscoach.main --riot-id "GameName#Tag" --region "eun1" --api-key "RG
 - **Economic Velocity Chart**: Dual-line canvas plotting player gold vs opponent gold with death event markers.
 
 ### 6.2 In-Game Replay Lead Time & Persistent Camera Lock
+- **Direct Client Auto-Launch**: If the League Client is not running when a replay is requested, NexusCoach directly executes `RiotClientServices.exe --launch-product=league_of_legends --launch-patchline=live` (or `LeagueClient.exe`), starts a background readiness monitor, and queues replay opening and camera lock as soon as client authentication finishes.
 - **Lead Time Buffer**: Configured to `-8.0s` before the fatal error to give the summoner situational awareness of enemy rotations and missing laners.
 - **Automatic Camera Lock**: Every time a replay is triggered (from hero banner or individual cards), the camera is automatically locked to the player's champion (`selectionName: champion_name, cameraAttached: True`).
 - **Burst Retries**: A background thread dispatches repeated lock commands during 3D engine startup to prevent League's initial fountain camera sweep from detaching the player lock.

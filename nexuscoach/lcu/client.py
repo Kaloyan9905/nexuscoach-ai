@@ -77,25 +77,13 @@ class LCUClient:
 
     def is_client_running(self) -> bool:
         """Check if League client is running and responding."""
-        if not self.base_url or not self.port:
-            if not self.refresh_credentials():
-                return False
+        if not self.refresh_credentials():
+            return False
         try:
-            r = self.session.get(f"{self.base_url}/lol-gameflow/v1/gameflow-phase", timeout=2)
-            if r.status_code == 200:
-                return True
+            r = self.session.get(f"{self.base_url}/lol-gameflow/v1/gameflow-phase", timeout=0.8)
+            return r.status_code == 200
         except Exception:
-            pass
-
-        # Re-check credentials in case the client restarted on a new port
-        if self.refresh_credentials():
-            try:
-                r = self.session.get(f"{self.base_url}/lol-gameflow/v1/gameflow-phase", timeout=2)
-                return r.status_code == 200
-            except Exception:
-                pass
-
-        return False
+            return False
 
     def get_gameflow_phase(self) -> Optional[str]:
         """Fetch current game phase (e.g. InProgress, PreEndGame, EndOfGame, Lobby, None)."""
@@ -156,7 +144,7 @@ class LCUClient:
                 "https://127.0.0.1:2999/replay/playback",
                 json={"time": max(0.0, float(seconds)), "paused": False},
                 verify=False,
-                timeout=2
+                timeout=0.4
             )
             return r.status_code == 200
         except Exception:

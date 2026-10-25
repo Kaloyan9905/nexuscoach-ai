@@ -117,19 +117,15 @@ class TestAllFeatures(unittest.TestCase):
 
     def test_09_watch_replay_auto_launches_client(self):
         """Verify /api/replay/watch triggers automatic client startup when League is closed."""
-        from unittest.mock import patch
-
-        with patch("nexuscoach.lcu.client.LCUClient.is_client_running", return_value=False), \
-             patch("nexuscoach.lcu.client.LCUClient.start_league_client", return_value=True):
-            resp = requests.post(
-                f"{BASE_URL}/api/replay/watch?match_id=DEMO_MATCH&time_seconds=350.0&champion_name=Malzahar",
-                timeout=5
-            )
-            self.assertEqual(resp.status_code, 200)
-            data = resp.json()
-            self.assertTrue(data["success"])
-            self.assertIn("Launching League of Legends Client", data["message"])
-            self.assertIn("camera locked on Malzahar", data["message"])
+        resp = requests.post(
+            f"{BASE_URL}/api/replay/watch?match_id=DEMO_MATCH&time_seconds=350.0&champion_name=Malzahar",
+            timeout=5
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertTrue(data["success"])
+        self.assertIn("Launching League of Legends Client", data["message"])
+        self.assertIn("camera locked on Malzahar", data["message"])
 
 if __name__ == "__main__":
     unittest.main()
