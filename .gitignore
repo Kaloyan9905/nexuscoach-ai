@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Secrets & Environment Variables (CRITICAL)
+.env
+*.env
+!.env.example
+
+# Local Caches & Generated Artifacts
+.cache/
+*.log
+*.sqlite
+*.sqlite3
+
+# Video Clips & Temporary Media
+nexuscoach/web/static/videos/*
+!nexuscoach/web/static/videos/.gitkeep
+*.webm
+*.mp4
+
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

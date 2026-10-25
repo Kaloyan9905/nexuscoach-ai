@@ -1,0 +1,1314 @@
+"""Generate the pristine, minimalist Senior UI/UX for NexusCoach AI without in-app video."""
+
+import os
+from pathlib import Path
+
+html_content = r'''<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusCoach AI // Autonomous Post-Game Coaching</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              DEFAULT: '#07080B',
+              50: '#0B0D13',
+              100: '#10131B',
+              200: '#151926',
+              300: '#1C2234',
+            },
+            prestige: {
+              DEFAULT: '#D4AF37',
+              light: '#F5E296',
+              dark: '#9A7D1C',
+              glow: 'rgba(212, 175, 55, 0.15)',
+            },
+            hextech: {
+              cyan: '#38BDF8',
+              teal: '#2DD4BF',
+              rose: '#FB7185',
+              crimson: '#F43F5E',
+              amber: '#FBBF24',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #07080B;
+      color: #E2E8F0;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    /* Subtle background radial glow */
+    .bg-mesh {
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(244, 63, 94, 0.03) 0%, transparent 60%);
+    }
+    /* Sleek scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0D13;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1C2234;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2D3748;
+    }
+    .glass-card {
+      background: rgba(13, 16, 24, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    .glass-input {
+      background: rgba(11, 13, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-input:focus {
+      border-color: #D4AF37;
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-obsidian text-zinc-200 bg-mesh selection:bg-prestige selection:text-black">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 border-b border-white/[0.06] bg-obsidian/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-prestige to-prestige-dark flex items-center justify-center shadow-lg shadow-prestige/20">
+          <svg class="w-4 h-4 text-obsidian" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 19h20L12 2zm0 4.2L18.4 17H5.6L12 6.2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold tracking-tight text-white uppercase font-mono">NEXUSCOACH</span>
+            <span class="text-[10px] font-semibold text-prestige bg-prestige/10 px-1.5 py-0.5 rounded border border-prestige/20">AI 2.0</span>
+          </div>
+          <p class="text-[10px] text-zinc-500 font-medium">Tactical Precision Post-Game Review</p>
+        </div>
+      </div>
+
+      <!-- Search & Controls -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-1 max-w-xl justify-end">
+        
+        <!-- Region Selector -->
+        <select id="regionSelect" class="glass-input text-xs font-mono text-zinc-300 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer">
+          <option value="eun1" selected>EUNE</option>
+          <option value="euw1">EUW</option>
+          <option value="na1">NA</option>
+          <option value="kr">KR</option>
+        </select>
+
+        <!-- Riot ID Input -->
+        <div class="relative flex-1 max-w-xs">
+          <input 
+            type="text" 
+            id="riotIdInput" 
+            value="stream#cls63" 
+            placeholder="GameName#Tag" 
+            class="w-full glass-input text-xs font-mono text-white rounded-lg pl-3 pr-8 py-1.5 focus:outline-none transition-all placeholder:text-zinc-600"
+            onkeydown="if(event.key === 'Enter') triggerAnalyze();"
+          />
+          <button 
+            onclick="triggerAnalyze()" 
+            title="Analyze Account"
+            class="absolute right-1.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-prestige transition"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Analyze CTA -->
+        <button 
+          id="btnAnalyze" 
+          onclick="triggerAnalyze()"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/10 hover:border-white/20 transition flex items-center gap-1.5 shrink-0"
+        >
+          <span id="btnAnalyzeSpinner" class="hidden animate-spin w-3 h-3 border-2 border-white/20 border-t-white rounded-full"></span>
+          <span>Analyze</span>
+        </button>
+
+        <!-- Instant Synthetic Demo -->
+        <button 
+          onclick="triggerDemo()"
+          class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.05] transition shrink-0 hidden md:block"
+        >
+          Demo Match
+        </button>
+
+        <!-- LCU Client Live Indicator -->
+        <div class="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono shrink-0 hidden sm:flex">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Client Port 2999</span>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- RECENT MATCHES PILL BAR -->
+  <section class="border-b border-white/[0.04] bg-obsidian-50/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" id="recentMatchesStrip">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mr-2 shrink-0">Recent Matches:</span>
+        <div class="flex items-center gap-2" id="recentMatchesList">
+          <div class="h-8 px-3 rounded-lg bg-white/[0.03] animate-pulse flex items-center gap-2">
+            <div class="w-5 h-5 rounded-full bg-white/10"></div>
+            <div class="w-16 h-3 bg-white/10 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ERROR BANNER (HIDDEN BY DEFAULT) -->
+    <div id="errorBanner" class="hidden p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 shrink-0 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <span id="errorMessage">An error occurred while loading match analytics.</span>
+      </div>
+      <button onclick="hideError()" class="text-rose-400 hover:text-white text-xs font-semibold">Dismiss</button>
+    </div>
+
+    <!-- MATCH HERO BANNER -->
+    <section id="matchHero" class="relative overflow-hidden rounded-2xl glass-card transition-all duration-300">
+      
+      <!-- Ambient Splash Art Background -->
+      <div 
+        id="heroSplashBg" 
+        class="absolute inset-0 bg-cover bg-center opacity-20 filter blur-sm scale-105 pointer-events-none transition-all duration-700"
+        style="background-image: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Malzahar_0.jpg');"
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/90 to-transparent pointer-events-none"></div>
+
+      <!-- Banner Body -->
+      <div class="relative z-10 p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        
+        <!-- Champion & Match identity -->
+        <div class="flex items-center gap-5">
+          <div class="relative">
+            <img 
+              id="heroUserChampIcon" 
+              src="https://ddragon.leagueoflegends.com/cdn/14.20.1/img/champion/Malzahar.png" 
+              alt="Champion"
+              class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-white/10 shadow-xl object-cover"
+            />
+            <span id="heroRoleBadge" class="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-md bg-obsidian-200 border border-white/10 text-[10px] font-mono font-bold text-zinc-300">
+              MID
+            </span>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2.5 mb-1.5 flex-wrap">
+              <span id="heroResultBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                Defeat
+              </span>
+              <span id="heroDuration" class="text-xs font-mono text-zinc-400">38:33</span>
+              <span class="text-zinc-600">•</span>
+              <span id="heroMatchId" class="text-xs font-mono text-zinc-500">EUN1_4019403334</span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+              <span id="heroUserChampName">Malzahar</span>
+              <span class="text-sm font-normal text-zinc-500 font-mono">vs</span>
+              <span id="heroOpponentName" class="text-zinc-300 font-medium">Hwei</span>
+            </h1>
+
+            <p class="text-xs text-zinc-400 mt-1 flex items-center gap-2">
+              <span>Solo Queue (Ranked)</span>
+              <span>•</span>
+              <span id="heroAnalysisSummary">Post-Game Coaching Review Generated</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- KPI Metrics & Direct Client Replay Launcher -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full sm:w-auto">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.05] min-w-[95px]">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-500">KDA Ratio</div>
+              <div id="kpiKda" class="text-lg font-bold font-mono text-white mt-0.5">4 / 10 / 8</div>
+              <div id="kpiKdaRatio" class="text-[10px] text-zinc-400 font-mono">1.20 KDA</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.05] min-w-[95px]">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-500">CS / Min</div>
+              <div id="kpiCsMin" class="text-lg font-bold font-mono text-white mt-0.5">6.2</div>
+              <div id="kpiCsTotal" class="text-[10px] text-zinc-400 font-mono">238 Total CS</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.05] min-w-[95px]">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Total Deaths</div>
+              <div id="kpiDeaths" class="text-lg font-bold font-mono text-rose-400 mt-0.5">10</div>
+              <div class="text-[10px] text-zinc-400 font-mono">5 High Severity</div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.05] min-w-[95px]">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-500">Key Anomalies</div>
+              <div id="kpiAnomalies" class="text-lg font-bold font-mono text-prestige mt-0.5">5</div>
+              <div class="text-[10px] text-zinc-400 font-mono">Actionable Fixes</div>
+            </div>
+          </div>
+
+          <!-- Hero Client Replay Button -->
+          <div class="shrink-0 flex flex-col items-start sm:items-end gap-1.5 w-full sm:w-auto">
+            <button 
+              id="heroReplayBtn"
+              onclick="triggerHeroReplay()"
+              class="w-full sm:w-auto px-4 py-3 rounded-xl bg-gradient-to-r from-prestige to-prestige-dark text-obsidian font-bold text-xs hover:brightness-110 shadow-xl shadow-prestige/25 transition flex items-center justify-center gap-2 group"
+              title="Open full replay in League Client with camera auto-locked on your player"
+            >
+              <svg class="w-4 h-4 fill-current transition group-hover:scale-110 shrink-0" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span>Launch Replay in Client</span>
+              <span class="text-[10px] bg-obsidian/30 text-obsidian px-1.5 py-0.5 rounded font-mono font-bold border border-obsidian/20 shrink-0">
+                🔒 Camera Locked
+              </span>
+            </button>
+            <span id="heroReplayStatus" class="text-[10px] font-mono text-zinc-400 hidden"></span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TWO-COLUMN WORKSPACE: LEFT INSIGHTS / RIGHT RADAR & CHARTS -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- LEFT COLUMN: COACHING INSIGHTS & ACTIONABLE MOMENTS (7 COLS) -->
+      <section class="lg:col-span-7 space-y-4">
+        
+        <!-- Header & Filter Tabs -->
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h2 class="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <span>Coaching Insights</span>
+              <span id="anomaliesCountBadge" class="text-[10px] font-mono font-bold bg-white/10 px-2 py-0.5 rounded-full text-zinc-300">5</span>
+            </h2>
+            <p class="text-xs text-zinc-500">Targeted tactical errors & macro leaks ranked by game impact</p>
+          </div>
+
+          <!-- Filter Pills -->
+          <div class="flex items-center gap-1 p-1 rounded-xl bg-obsidian-100 border border-white/[0.06] text-xs">
+            <button 
+              id="filterTabTop" 
+              onclick="switchFilterTab('top')"
+              class="px-2.5 py-1 rounded-lg font-medium text-white bg-white/10 transition"
+            >
+              Top Priority
+            </button>
+            <button 
+              id="filterTabDeaths" 
+              onclick="switchFilterTab('deaths')"
+              class="px-2.5 py-1 rounded-lg font-medium text-zinc-400 hover:text-white transition"
+            >
+              All Deaths (<span id="tabDeathsCount">10</span>)
+            </button>
+            <button 
+              id="filterTabAll" 
+              onclick="switchFilterTab('all')"
+              class="px-2.5 py-1 rounded-lg font-medium text-zinc-400 hover:text-white transition"
+            >
+              All Events
+            </button>
+          </div>
+        </div>
+
+        <!-- Takeaways Container -->
+        <div id="takeawaysList" class="space-y-4">
+          <!-- Dynamically populated via renderTakeaways() -->
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: MINIMAP RADAR, ADVANTAGE CHART & AI SUMMARY (5 COLS) -->
+      <aside class="lg:col-span-5 space-y-5">
+        
+        <!-- TACTICAL SUMMONER'S RIFT MINIMAP -->
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-prestige animate-pulse"></span>
+              <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">Tactical Minimap Radar</h3>
+            </div>
+            <span class="text-[10px] font-mono text-zinc-500">Click pin to focus event</span>
+          </div>
+
+          <!-- Canvas Container -->
+          <div class="relative w-full aspect-square rounded-xl overflow-hidden border border-white/[0.08] bg-obsidian-200">
+            <canvas id="riftCanvas" width="512" height="512" class="w-full h-full block cursor-crosshair"></canvas>
+            
+            <!-- Hover Tooltip -->
+            <div 
+              id="mapTooltip" 
+              class="hidden absolute z-30 pointer-events-none p-2.5 rounded-lg bg-obsidian/95 border border-white/20 text-xs shadow-2xl backdrop-blur-md max-w-[200px]"
+            ></div>
+          </div>
+
+          <!-- Legend -->
+          <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 border border-white/40"></span>
+              <span>Death Location</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400/80 border border-emerald-300"></span>
+              <span>Ward Vision</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-prestige border border-white/40"></span>
+              <span>Selected Event</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GOLD ADVANTAGE PROGRESSION CHART -->
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">Gold & Economy Velocity</h3>
+            <span class="text-[10px] font-mono text-zinc-500">Player vs Opponent</span>
+          </div>
+
+          <div class="relative w-full h-44 rounded-xl overflow-hidden border border-white/[0.08] bg-obsidian-200 p-2">
+            <canvas id="chartCanvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-0.5 bg-prestige"></span>
+              <span class="text-zinc-300">Your Gold</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-0.5 bg-rose-400"></span>
+              <span class="text-zinc-300">Opponent Gold</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              <span>Death Point</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXECUTIVE COACHING SYNTHESIS -->
+        <div class="glass-card rounded-2xl p-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-prestige" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300">Executive AI Synthesis</h3>
+          </div>
+          
+          <div id="aiReviewContent" class="text-xs leading-relaxed text-zinc-300 space-y-2 prose-invert font-normal">
+            <p class="text-zinc-400">Click Analyze to generate the full post-game coaching synthesis.</p>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- REPLAY STATUS TOAST (FLOATING NOTIFICATION) -->
+  <div 
+    id="replayToast" 
+    class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none p-4 rounded-xl glass-card border border-prestige/40 shadow-2xl max-w-sm flex items-center gap-3"
+  >
+    <div class="w-8 h-8 rounded-lg bg-prestige/20 border border-prestige/40 flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4 text-prestige animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div class="flex-1">
+      <div class="text-[11px] font-mono uppercase tracking-wider text-prestige font-bold">League Client Replay</div>
+      <div id="replayToastMessage" class="text-xs text-white mt-0.5">Replay launching in League Client with camera locked...</div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CORE -->
+  <script>
+    // State
+    let currentData = null;
+    let activeFilter = 'top';
+    let hoveredDeathIndex = null;
+    let selectedDeathIndex = null;
+    let currentRiotId = 'stream#cls63';
+    let currentRegion = 'eun1';
+    let currentMatchId = 'EUN1_4019403334';
+    let animationFrameHandles = {};
+
+    // Satellite Map Texture (Summoner's Rift Official Minimap)
+    const officialMapImg = new Image();
+    officialMapImg.crossOrigin = 'anonymous';
+    officialMapImg.src = 'https://raw.githubusercontent.com/meraki-analytics/lol-minimap-data/master/assets/images/map11.png';
+    officialMapImg.onload = () => renderMap();
+
+    // Helper: Champion Icon
+    function getChampIcon(name) {
+      if (!name) return 'https://ddragon.leagueoflegends.com/cdn/14.20.1/img/champion/Malzahar.png';
+      const clean = name.replace(/[^a-zA-Z]/g, '');
+      return `https://ddragon.leagueoflegends.com/cdn/14.20.1/img/champion/${clean}.png`;
+    }
+
+    // Helper: Champion Splash Art
+    function getChampSplash(name) {
+      if (!name) return 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Malzahar_0.jpg';
+      const clean = name.replace(/[^a-zA-Z]/g, '');
+      return `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${clean}_0.jpg`;
+    }
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      loadHistory();
+      triggerAnalyze();
+    });
+
+    // Load Recent Matches Strip
+    async function loadHistory() {
+      const strip = document.getElementById('recentMatchesList');
+      try {
+        const resp = await fetch(`/api/history?riot_id=${encodeURIComponent(currentRiotId)}&region=${currentRegion}&count=5`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        const matches = data.history || [];
+        if (!matches.length) return;
+
+        strip.innerHTML = matches.map((m, idx) => {
+          const isWin = m.win;
+          const isSelected = m.matchId === currentMatchId;
+          return `
+            <button 
+              onclick="analyzeSpecificMatch('${m.matchId}')"
+              class="h-9 px-3 rounded-xl flex items-center gap-2.5 transition shrink-0 border ${isSelected ? 'bg-white/10 border-prestige' : 'bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.08]'}"
+            >
+              <img src="${m.championIcon || getChampIcon(m.championName)}" class="w-5 h-5 rounded-full object-cover border border-white/20" />
+              <span class="text-xs font-semibold text-white">${m.championName}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${isWin ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+                ${isWin ? 'WIN' : 'LOSS'}
+              </span>
+              <span class="text-[10px] font-mono text-zinc-500">${m.kda || ''}</span>
+            </button>
+          `;
+        }).join('');
+      } catch (e) {
+        console.warn('History load failed:', e);
+      }
+    }
+
+    // Analyze Specific Match
+    function analyzeSpecificMatch(matchId) {
+      currentMatchId = matchId;
+      triggerAnalyze(matchId);
+    }
+
+    // Trigger Main Analysis
+    async function triggerAnalyze(specificMatchId) {
+      const riotId = document.getElementById('riotIdInput').value.trim() || currentRiotId;
+      const region = document.getElementById('regionSelect').value || currentRegion;
+      currentRiotId = riotId;
+      currentRegion = region;
+
+      setLoading(true);
+      hideError();
+
+      try {
+        let url = `/api/analyze?riot_id=${encodeURIComponent(riotId)}&region=${region}`;
+        if (specificMatchId || currentMatchId) {
+          url += `&match_id=${specificMatchId || currentMatchId}`;
+        }
+
+        const resp = await fetch(url);
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || 'Failed to analyze match.');
+        }
+
+        const data = await resp.json();
+        currentData = data.analysis;
+        currentMatchId = currentData.metadata?.matchId || currentMatchId;
+        
+        renderDashboard(currentData, data.review);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Trigger Instant Demo
+    async function triggerDemo() {
+      setLoading(true);
+      hideError();
+      try {
+        const resp = await fetch('/api/demo');
+        const data = await resp.json();
+        currentData = data.analysis;
+        currentMatchId = currentData.metadata?.matchId || 'DEMO';
+        renderDashboard(currentData, data.review);
+      } catch (err) {
+        showError('Failed to load demo.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function setLoading(isLoading) {
+      const spinner = document.getElementById('btnAnalyzeSpinner');
+      if (spinner) {
+        spinner.classList.toggle('hidden', !isLoading);
+      }
+    }
+
+    function showError(msg) {
+      const banner = document.getElementById('errorBanner');
+      const text = document.getElementById('errorMessage');
+      if (banner && text) {
+        text.innerText = msg;
+        banner.classList.remove('hidden');
+      }
+    }
+
+    function hideError() {
+      const banner = document.getElementById('errorBanner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    function switchFilterTab(tab) {
+      activeFilter = tab;
+      document.querySelectorAll('#filterTabTop, #filterTabDeaths, #filterTabAll').forEach(b => {
+        b.className = 'px-2.5 py-1 rounded-lg font-medium text-zinc-400 hover:text-white transition';
+      });
+      const activeBtn = document.getElementById(tab === 'top' ? 'filterTabTop' : tab === 'deaths' ? 'filterTabDeaths' : 'filterTabAll');
+      if (activeBtn) {
+        activeBtn.className = 'px-2.5 py-1 rounded-lg font-medium text-white bg-white/10 transition';
+      }
+      renderTakeaways();
+    }
+
+    // Hero Replay Trigger
+    function triggerHeroReplay() {
+      const userChamp = currentData?.metadata?.userChampion || 'Malzahar';
+      const firstAnomaly = (currentData?.top_anomalies && currentData.top_anomalies[0]) || {};
+      const timeSec = firstAnomaly.timestamp_ms ? (firstAnomaly.timestamp_ms / 1000) : 350;
+      triggerWatchReplay(timeSec, 'heroReplayStatus', userChamp, 7500, 7500);
+    }
+
+    // Render Full Dashboard
+    function renderDashboard(analysis, review) {
+      const meta = analysis.metadata || {};
+      
+      // Hero Elements
+      document.getElementById('heroUserChampName').innerText = meta.userChampion || 'Malzahar';
+      document.getElementById('heroOpponentName').innerText = meta.opponentChampion || 'Hwei';
+      document.getElementById('heroRoleBadge').innerText = meta.role || 'MID';
+      document.getElementById('heroDuration').innerText = meta.duration || '38:33';
+      document.getElementById('heroMatchId').innerText = meta.matchId || currentMatchId;
+
+      const isDefeat = (meta.result || 'Defeat').toLowerCase() === 'defeat';
+      const resultBadge = document.getElementById('heroResultBadge');
+      resultBadge.innerText = meta.result || 'Defeat';
+      resultBadge.className = isDefeat 
+        ? 'px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30'
+        : 'px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+
+      document.getElementById('heroUserChampIcon').src = getChampIcon(meta.userChampion);
+      document.getElementById('heroSplashBg').style.backgroundImage = `url('${getChampSplash(meta.userChampion)}')`;
+
+      // KPIs
+      document.getElementById('kpiKda').innerText = meta.kda || '4 / 10 / 8';
+      document.getElementById('kpiCsMin').innerText = meta.cs_per_min || '6.2';
+      document.getElementById('kpiCsTotal').innerText = `${meta.cs || 238} Total CS`;
+      
+      const deaths = analysis.deaths || [];
+      document.getElementById('kpiDeaths').innerText = deaths.length;
+      document.getElementById('tabDeathsCount').innerText = deaths.length;
+
+      const topAnomalies = analysis.top_anomalies || [];
+      document.getElementById('kpiAnomalies').innerText = topAnomalies.length;
+      document.getElementById('anomaliesCountBadge').innerText = topAnomalies.length;
+
+      // Executive Review Text
+      const aiContent = document.getElementById('aiReviewContent');
+      if (aiContent && review) {
+        aiContent.innerHTML = formatMarkdown(review);
+      }
+
+      // Render Visual Components
+      renderTakeaways();
+      renderMap();
+      renderChart();
+      loadHistory();
+    }
+
+    // Simple Markdown Formatter
+    function formatMarkdown(text) {
+      if (!text) return '';
+      return text
+        .replace(/^### (.*$)/gim, '<h4 class="text-xs font-mono font-bold text-prestige uppercase mt-2">$1</h4>')
+        .replace(/^## (.*$)/gim, '<h3 class="text-sm font-bold text-white uppercase mt-2">$1</h3>')
+        .replace(/\*\*(.*?)\*\*/gim, '<strong class="font-semibold text-zinc-100">$1</strong>')
+        .replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc text-zinc-300">$1</li>')
+        .replace(/\n\n/gim, '<br>');
+    }
+
+    // Render Coaching Takeaways (Clean, without in-app video feature)
+    function renderTakeaways() {
+      const container = document.getElementById('takeawaysList');
+      if (!container || !currentData) return;
+
+      let items = [];
+      if (activeFilter === 'top') {
+        items = currentData.top_anomalies || [];
+      } else if (activeFilter === 'deaths') {
+        items = (currentData.deaths || []).map(d => ({
+          type: 'DEATH_ANALYSIS',
+          timestamp: d.timestamp,
+          timestamp_ms: d.timestamp_ms,
+          position: d.position,
+          killer: d.killer,
+          assisters: d.assisters,
+          had_vision: d.had_vision,
+          flash_available: d.flash_available,
+          severity_score: d.severity_score || 6.5,
+          engagement_type: d.engagement_type || 'Isolated Death',
+          plates_lost_after: d.plates_lost_after || 0,
+        }));
+      } else {
+        items = currentData.all_anomalies || currentData.top_anomalies || [];
+      }
+
+      if (!items.length) {
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-8 text-center text-zinc-500 text-xs">
+            No anomalies detected in this category. Excellent macro discipline!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map((item, index) => {
+        const timeSec = item.timestamp_ms ? (item.timestamp_ms / 1000) : 0;
+        const posX = item.position?.x || item.x || 7500;
+        const posY = item.position?.y || item.y || 7500;
+        const userChamp = currentData.metadata?.userChampion || 'Malzahar';
+
+        // Derive Structured Context & Actionable Fix
+        let title = 'Critical Macro Vulnerability';
+        let contextText = 'Isolated positioning resulted in high vulnerability to enemy rotation.';
+        let impactText = 'Surrendered lane tempo and pressure to opponent.';
+        let fixText = 'Maintain tethering to safe river side with active ward coverage.';
+        let badgeColor = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+        let leftBarColor = 'border-rose-500';
+
+        if (item.type === 'DEATH_ANALYSIS') {
+          title = `${item.engagement_type || 'Isolated Death'} vs ${item.killer || 'Enemy'}`;
+          contextText = `Collapsed on by ${item.killer || 'opponent'}${item.assisters && item.assisters.length ? ' + ' + item.assisters.join(', ') : ''} without active vision in river perimeter.`;
+          impactText = `-300g gifted directly to ${item.killer || 'enemy'}${item.plates_lost_after ? `, ${item.plates_lost_after} tower plate(s) conceded` : ''}.`;
+          fixText = item.flash_available 
+            ? 'Flash was available! Buffer Flash immediately upon enemy vision cue before CC chain lands.'
+            : 'Hover towards the warded side of the lane. Do not cross the river divide while Flash is on cooldown.';
+        } else if (item.type === 'OBJECTIVE_DESYNC') {
+          title = `Late Rotation to ${item.objective || 'Dragon'} Fight`;
+          contextText = `You were ${item.distance_to_pit || '8,500'} units away from the pit during the team fight clash.`;
+          impactText = `Team fought a 4v5 disadvantage, conceding the neutral objective.`;
+          fixText = `Prep mid wave 45s before dragon spawn and establish lane priority for immediate rotation.`;
+          badgeColor = 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+          leftBarColor = 'border-amber-500';
+        } else if (item.type === 'GOLD_HOARDING') {
+          title = `Excessive Gold Hoarding (${item.unspent_gold || 2400}g unspent)`;
+          contextText = `Holding ${item.unspent_gold} unspent gold in inventory across several wave cycles.`;
+          impactText = `Severe item disparity and combat stat deficit against an opponent with completed components.`;
+          fixText = `Execute a clean base timing on Cannon wave immediately after reaching 1,300g component breakpoint.`;
+          badgeColor = 'bg-prestige/20 text-prestige border-prestige/30';
+          leftBarColor = 'border-prestige';
+        }
+
+        return `
+          <div 
+            id="takeaway-card-${index}" 
+            class="glass-card rounded-2xl p-5 border-l-4 ${leftBarColor} transition-all duration-300 hover:scale-[1.01] space-y-4"
+          >
+            <!-- Card Header -->
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="px-2.5 py-1 rounded-lg bg-white/10 font-mono text-xs font-bold text-white">
+                  ${item.timestamp || '00:00'}
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border ${badgeColor}">
+                  ${item.type?.replace('_', ' ') || 'ANOMALY'}
+                </span>
+              </div>
+              
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono text-zinc-400">Severity:</span>
+                <span class="text-xs font-mono font-bold text-white px-2 py-0.5 rounded bg-white/[0.06]">
+                  ${item.severity_score ? item.severity_score.toFixed(1) : '6.5'} / 10
+                </span>
+              </div>
+            </div>
+
+            <!-- Title & Context -->
+            <div>
+              <h3 class="text-sm font-bold text-white tracking-tight">${title}</h3>
+              <p class="text-xs text-zinc-400 mt-1">${contextText}</p>
+            </div>
+
+            <!-- Impact & Fix Pills -->
+            <div class="space-y-2 text-xs">
+              <div class="p-2.5 rounded-xl bg-rose-500/[0.05] border border-rose-500/20 text-rose-300 flex items-start gap-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-rose-400 font-bold shrink-0 mt-0.5">Consequence:</span>
+                <span>${impactText}</span>
+              </div>
+
+              <div class="p-2.5 rounded-xl bg-emerald-500/[0.05] border border-emerald-500/20 text-emerald-300 flex items-start gap-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold shrink-0 mt-0.5">Tactical Fix:</span>
+                <span>${fixText}</span>
+              </div>
+            </div>
+
+            <!-- Action Toolbar: Direct Client Replay Reference -->
+            <div class="pt-2 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
+              
+              <!-- Client Replay Launch Button with -8s Lead & Locked Camera -->
+              <button 
+                onclick="triggerWatchReplay(${timeSec}, 'replay-status-${index}', '${userChamp}', ${posX}, ${posY})"
+                class="px-4 py-2 rounded-xl bg-gradient-to-r from-prestige to-prestige-dark text-obsidian font-bold text-xs hover:brightness-110 shadow-lg shadow-prestige/25 transition flex items-center gap-2 group"
+                title="Launch replay in League Client at -8s lead with camera locked on ${userChamp}"
+              >
+                <svg class="w-3.5 h-3.5 fill-current transition group-hover:scale-110" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <span>Launch in Client (-8s Lead)</span>
+                <span class="text-[10px] bg-obsidian/30 text-obsidian px-1.5 py-0.5 rounded font-mono font-bold border border-obsidian/20">
+                  🔒 Camera Locked to ${userChamp}
+                </span>
+              </button>
+
+              <div class="flex items-center gap-2">
+                <!-- 2D Tactical Replay Toggle -->
+                <button 
+                  onclick="toggleTacticalReplay(${index})"
+                  class="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-zinc-300 text-xs font-medium transition flex items-center gap-1.5"
+                >
+                  <svg class="w-3.5 h-3.5 text-hextech-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                  </svg>
+                  <span>2D Tactical Canvas</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Status Feedback Container -->
+            <div id="replay-status-${index}" class="text-[11px] font-mono text-zinc-400 hidden"></div>
+
+            <!-- EMBEDDED 2D TACTICAL CANVAS (COLLAPSIBLE) -->
+            <div id="tactical-panel-${index}" class="hidden pt-3 border-t border-white/[0.06] space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono text-zinc-400">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-hextech-cyan animate-pulse"></span>
+                  <span id="tactical-timer-${index}">T-3.0s until collapse</span>
+                </span>
+                <span class="text-zinc-500">Summoner's Rift Map Coordinates</span>
+              </div>
+
+              <div class="relative w-full h-56 rounded-xl overflow-hidden border border-white/10 bg-obsidian-300">
+                <canvas id="tactical-canvas-${index}" width="600" height="240" class="w-full h-full block"></canvas>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Launch In-Game Replay with -8s Lead & Camera Lock
+    async function triggerWatchReplay(timeSeconds, statusElId, champName, targetX, targetY) {
+      const userChamp = champName || currentData?.metadata?.userChampion || 'Malzahar';
+      const statusEl = document.getElementById(statusElId);
+      if (statusEl) {
+        statusEl.classList.remove('hidden');
+        statusEl.innerText = `⚡ Opening in League Client (-8s lead) • Camera locked on ${userChamp}...`;
+        statusEl.className = 'text-[11px] font-mono text-prestige';
+      }
+
+      showToast(`Opening replay in League Client • Camera locked on ${userChamp}...`);
+
+      try {
+        const lead = 8.0;
+        const url = `/api/replay/watch?match_id=${encodeURIComponent(currentMatchId)}&time_seconds=${timeSeconds}&lead_seconds=${lead}&champion_name=${encodeURIComponent(userChamp)}&x=${targetX || 7500}&y=${targetY || 7500}`;
+        const resp = await fetch(url, { method: 'POST' });
+        const data = await resp.json();
+
+        if (statusEl) {
+          statusEl.innerText = data.message;
+          statusEl.className = data.success ? 'text-[11px] font-mono text-emerald-400' : 'text-[11px] font-mono text-amber-400';
+        }
+
+        showToast(data.message);
+      } catch (e) {
+        if (statusEl) {
+          statusEl.innerText = 'Launch League Client to start replay.';
+          statusEl.className = 'text-[11px] font-mono text-zinc-500';
+        }
+        showToast('Launch League Client to start replay.');
+      }
+    }
+
+    // Toast Notification Controller
+    function showToast(msg) {
+      const toast = document.getElementById('replayToast');
+      const text = document.getElementById('replayToastMessage');
+      if (!toast || !text) return;
+      text.innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 4500);
+    }
+
+    // Toggle 2D Tactical Canvas
+    function toggleTacticalReplay(index) {
+      const panel = document.getElementById(`tactical-panel-${index}`);
+      if (!panel) return;
+      const isHidden = panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', !isHidden);
+      if (isHidden) {
+        startTacticalAnimation(index);
+      } else {
+        if (animationFrameHandles[index]) {
+          cancelAnimationFrame(animationFrameHandles[index]);
+          delete animationFrameHandles[index];
+        }
+      }
+    }
+
+    // Start 2D Canvas Animation
+    function startTacticalAnimation(index) {
+      const canvas = document.getElementById(`tactical-canvas-${index}`);
+      const timerEl = document.getElementById(`tactical-timer-${index}`);
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const items = (activeFilter === 'top') ? (currentData.top_anomalies || []) : (currentData.all_anomalies || currentData.deaths || []);
+      const item = items[index] || {};
+
+      const targetX = item.position?.x || item.x || 7500;
+      const targetY = item.position?.y || item.y || 7500;
+
+      // Coordinate converter (League 0..16000)
+      const toX = (x) => (x / 16000) * w;
+      const toY = (y) => h - (y / 16000) * h;
+
+      const userStartX = targetX - 600;
+      const userStartY = targetY - 500;
+      const enemyStartX = targetX + 1200;
+      const enemyStartY = targetY + 800;
+
+      const userChamp = currentData.metadata?.userChampion || 'Malzahar';
+      const enemyChamp = item.killer || currentData.metadata?.opponentChampion || 'Hwei';
+
+      const userImg = new Image();
+      userImg.src = getChampIcon(userChamp);
+      const enemyImg = new Image();
+      enemyImg.src = getChampIcon(enemyChamp);
+
+      let start = null;
+      const loopDuration = 3600; // ms
+
+      function frame(now) {
+        if (!start) start = now;
+        const elapsed = (now - start) % loopDuration;
+        const progress = Math.min(1.0, elapsed / 2600);
+        const secRemaining = Math.max(0, (2.6 - (elapsed / 1000))).toFixed(1);
+
+        if (timerEl) {
+          timerEl.innerText = elapsed < 2600 
+            ? `T-${secRemaining}s until collapse`
+            : `💥 Fatal CC Chain Connected`;
+        }
+
+        // Draw Map Texture Background
+        if (officialMapImg.complete && officialMapImg.naturalWidth > 0) {
+          ctx.drawImage(officialMapImg, 0, 0, w, h);
+          ctx.fillStyle = 'rgba(7, 8, 11, 0.65)';
+          ctx.fillRect(0, 0, w, h);
+        } else {
+          ctx.fillStyle = '#0B0D13';
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        // Vision Zone
+        if (item.had_vision) {
+          const vx = toX(targetX + 400);
+          const vy = toY(targetY - 300);
+          ctx.fillStyle = 'rgba(45, 212, 191, 0.12)';
+          ctx.beginPath();
+          ctx.arc(vx, vy, 40, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#2DD4BF';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Paths
+        ctx.lineWidth = 2;
+        // User Path (Teal)
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(toX(userStartX), toY(userStartY));
+        ctx.lineTo(toX(targetX), toY(targetY));
+        ctx.stroke();
+
+        // Enemy Flank Path (Rose Dashed)
+        ctx.strokeStyle = 'rgba(244, 63, 94, 0.7)';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(toX(enemyStartX), toY(enemyStartY));
+        ctx.lineTo(toX(targetX), toY(targetY));
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Interpolated Positions
+        const cx = userStartX + (targetX - userStartX) * progress;
+        const cy = userStartY + (targetY - userStartY) * progress;
+        const ex = enemyStartX + (targetX - enemyStartX) * progress;
+        const ey = enemyStartY + (targetY - enemyStartY) * progress;
+
+        // Draw Champion Avatars
+        const drawAvatar = (x, y, img, borderCol, label) => {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(x, y, 14, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          if (img.complete && img.naturalWidth > 0) {
+            ctx.drawImage(img, x - 14, y - 14, 28, 28);
+          } else {
+            ctx.fillStyle = borderCol;
+            ctx.fill();
+          }
+          ctx.restore();
+
+          // Border Ring
+          ctx.strokeStyle = borderCol;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 14, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Label
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = '10px JetBrains Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, x, y - 18);
+        };
+
+        drawAvatar(toX(cx), toY(cy), userImg, '#38BDF8', userChamp);
+        drawAvatar(toX(ex), toY(ey), enemyImg, '#F43F5E', enemyChamp);
+
+        // Fatal Impact Wave
+        if (elapsed >= 2600) {
+          const impactProgress = (elapsed - 2600) / 1000;
+          ctx.strokeStyle = `rgba(244, 63, 94, ${1 - impactProgress})`;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(toX(targetX), toY(targetY), impactProgress * 60, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        animationFrameHandles[index] = requestAnimationFrame(frame);
+      }
+
+      animationFrameHandles[index] = requestAnimationFrame(frame);
+    }
+
+    // Interactive Minimap Radar
+    function renderMap() {
+      const canvas = document.getElementById('riftCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Draw Satellite Map
+      if (officialMapImg.complete && officialMapImg.naturalWidth > 0) {
+        ctx.drawImage(officialMapImg, 0, 0, w, h);
+        ctx.fillStyle = 'rgba(7, 8, 11, 0.25)';
+        ctx.fillRect(0, 0, w, h);
+      } else {
+        ctx.fillStyle = '#0B0D13';
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      if (!currentData) return;
+
+      const toX = (x) => (x / 16000) * w;
+      const toY = (y) => h - (y / 16000) * h;
+
+      const deaths = currentData.deaths || [];
+      deaths.forEach((d, idx) => {
+        const x = toX(d.position?.x || d.x || 7500);
+        const y = toY(d.position?.y || d.y || 7500);
+
+        const isHovered = hoveredDeathIndex === idx;
+        const isSelected = selectedDeathIndex === idx;
+
+        // Outer Glow Ring
+        ctx.beginPath();
+        ctx.arc(x, y, isHovered || isSelected ? 12 : 8, 0, Math.PI * 2);
+        ctx.fillStyle = isSelected ? 'rgba(212, 175, 55, 0.4)' : isHovered ? 'rgba(244, 63, 94, 0.5)' : 'rgba(244, 63, 94, 0.25)';
+        ctx.fill();
+
+        // Pin Core
+        ctx.beginPath();
+        ctx.arc(x, y, isHovered || isSelected ? 6 : 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = isSelected ? '#D4AF37' : '#F43F5E';
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Pin Label
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '9px JetBrains Mono';
+        ctx.textAlign = 'center';
+        ctx.fillText(d.timestamp || '', x, y - 9);
+      });
+    }
+
+    // Map Interactivity
+    const riftCanvas = document.getElementById('riftCanvas');
+    if (riftCanvas) {
+      riftCanvas.addEventListener('mousemove', (e) => {
+        const rect = riftCanvas.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * riftCanvas.width;
+        const mouseY = ((e.clientY - rect.top) / rect.height) * riftCanvas.height;
+
+        const found = getDeathNearMouse(mouseX, mouseY);
+        const tooltip = document.getElementById('mapTooltip');
+
+        if (found !== null) {
+          hoveredDeathIndex = found;
+          const d = currentData.deaths[found];
+          tooltip.classList.remove('hidden');
+          tooltip.style.left = `${(e.clientX - rect.left) + 12}px`;
+          tooltip.style.top = `${(e.clientY - rect.top) + 12}px`;
+          tooltip.innerHTML = `
+            <div class="font-bold text-white flex items-center justify-between gap-2">
+              <span>Death at ${d.timestamp}</span>
+              <span class="text-rose-400 font-mono">Fatal</span>
+            </div>
+            <div class="text-[11px] text-zinc-400 mt-1">Killer: <span class="text-white">${d.killer || 'Enemy'}</span></div>
+            <div class="text-[10px] text-zinc-500 font-mono mt-0.5">${d.flash_available ? '⚡ Flash was Ready' : 'Flash on CD'}</div>
+          `;
+        } else {
+          hoveredDeathIndex = null;
+          tooltip.classList.add('hidden');
+        }
+        renderMap();
+      });
+
+      riftCanvas.addEventListener('mouseleave', () => {
+        hoveredDeathIndex = null;
+        document.getElementById('mapTooltip')?.classList.add('hidden');
+        renderMap();
+      });
+
+      riftCanvas.addEventListener('click', (e) => {
+        const rect = riftCanvas.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * riftCanvas.width;
+        const mouseY = ((e.clientY - rect.top) / rect.height) * riftCanvas.height;
+        const found = getDeathNearMouse(mouseX, mouseY);
+        if (found !== null) {
+          selectedDeathIndex = found;
+          renderMap();
+          const card = document.getElementById(`takeaway-card-${found}`);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('ring-2', 'ring-prestige');
+            setTimeout(() => card.classList.remove('ring-2', 'ring-prestige'), 2000);
+          }
+        }
+      });
+    }
+
+    function getDeathNearMouse(mx, my) {
+      if (!currentData || !currentData.deaths) return null;
+      const w = 512;
+      const h = 512;
+      const toX = (x) => (x / 16000) * w;
+      const toY = (y) => h - (y / 16000) * h;
+
+      for (let i = 0; i < currentData.deaths.length; i++) {
+        const d = currentData.deaths[i];
+        const dx = toX(d.position?.x || d.x || 7500);
+        const dy = toY(d.position?.y || d.y || 7500);
+        const dist = Math.hypot(mx - dx, my - dy);
+        if (dist <= 14) return i;
+      }
+      return null;
+    }
+
+    // Economy Velocity Chart
+    function renderChart() {
+      const canvas = document.getElementById('chartCanvas');
+      if (!canvas || !currentData) return;
+      const series = currentData.timeline_series || [];
+      if (series.length < 2) return;
+
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * (window.devicePixelRatio || 1);
+      canvas.height = rect.height * (window.devicePixelRatio || 1);
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const maxGold = Math.max(...series.map(s => Math.max(s.userTotalGold || 0, s.oppTotalGold || 0)), 12000);
+      const points = series.length;
+
+      const getX = (i) => (i / (points - 1)) * (w - 40) + 20;
+      const getY = (val) => h - 20 - (val / maxGold) * (h - 35);
+
+      // Grid Lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let g = 0; g <= maxGold; g += 4000) {
+        const y = getY(g);
+        ctx.beginPath();
+        ctx.moveTo(20, y);
+        ctx.lineTo(w - 20, y);
+        ctx.stroke();
+      }
+
+      // Draw Opponent Gold Curve (Rose)
+      ctx.strokeStyle = '#FB7185';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      series.forEach((s, idx) => {
+        const x = getX(idx);
+        const y = getY(s.oppTotalGold || 0);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw Player Gold Curve (Prestige Gold)
+      ctx.strokeStyle = '#D4AF37';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      series.forEach((s, idx) => {
+        const x = getX(idx);
+        const y = getY(s.userTotalGold || 0);
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Plot Death Events on Baseline
+      const deaths = currentData.deaths || [];
+      const totalMin = series.length;
+      deaths.forEach(d => {
+        const parts = (d.timestamp || '00:00').split(':');
+        const min = parseInt(parts[0]) + (parseInt(parts[1]) / 60);
+        const x = (min / totalMin) * (w - 40) + 20;
+        
+        ctx.fillStyle = '#F43F5E';
+        ctx.beginPath();
+        ctx.arc(x, h - 8, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+    }
+
+    // Resize Listener
+    window.addEventListener('resize', () => {
+      renderMap();
+      renderChart();
+    });
+  </script>
+</body>
+</html>
+'''
+
+# 1. Write to web static directory
+static_path = Path("nexuscoach/web/static/index.html")
+static_path.parent.mkdir(parents=True, exist_ok=True)
+with open(static_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+print(f"Wrote static/index.html: {len(html_content)} bytes")
+
+# 2. Write to brain artifact directory
+artifact_path = Path(r"C:\Users\Kaloyan Milchev\.gemini\antigravity\brain\0ebc2576-ef4f-4429-80b6-f1fd6dbe19c8\nexuscoach_dashboard.html")
+with open(artifact_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+print(f"Wrote brain artifact nexuscoach_dashboard.html: {len(html_content)} bytes")
